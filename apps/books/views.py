@@ -286,12 +286,14 @@ def cancel_borrow_request(request, request_id):
 @authentication_classes([JWTAuthentication])
 def accept_borrow_request(request, request_id):
     borrow_request = get_object_or_404(BorrowRequest, id=request_id)
+
+
     if borrow_request.status != 'PENDING':
         return Response({"message":"This request has already been processed."}, status=status.HTTP_400_BAD_REQUEST)
     
     if BorrowRequest.objects.filter(book=borrow_request.book, status='ACCEPTED').exists():
         return Response({"message":"This book has already been accepted for borrowing."}, status=status.HTTP_400_BAD_REQUEST)
-
+    
 
     if borrow_request.owner != request.user:
         return Response({"message":"You are not authorized to accept this request."}, status=status.HTTP_403_FORBIDDEN)
