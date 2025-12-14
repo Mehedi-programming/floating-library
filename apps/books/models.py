@@ -42,6 +42,10 @@ class Book(models.Model):
             self.slug = slug
         super().save(*args, **kwargs)
 
+        @property
+        def is_available(self):
+            return not self.BorrowRequest.filter(book=self, status='ACCEPTED').exists()
+
 
     def __str__(self):
         return self.title

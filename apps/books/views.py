@@ -40,7 +40,7 @@ def book_update(request, book_id):
 @api_view(['GET'])
 def book_details(request, book_id):
         book = get_object_or_404(Book, id=book_id)
-        serializer = BookDetailSerializer(book)
+        serializer = BookDetailSerializer(book, context={'request': request})
         return Response({"data": serializer.data}, status=status.HTTP_200_OK)
 
 
@@ -230,6 +230,10 @@ def borrow_request(request, book_id):
     if request_count >= 2:
         return Response({"message":"You have reached the maximum number of borrowed books (2)"}, status=status.HTTP_400_BAD_REQUEST)
     
+    requested_book = BorrowRequest.objects.filter(book=book, status='ACCEPTED').first()
+    if requested_book:
+        return Response({"message":"This book is currently unavailable."}, status=status.HTTP_400_BAD_REQUEST)
+
     existing_request = BorrowRequest.objects.filter(requester=request.user, book=book, status='PENDING').first()
     if existing_request:
         return Response({"message":"You have already requested this book."}, status=status.HTTP_400_BAD_REQUEST)
