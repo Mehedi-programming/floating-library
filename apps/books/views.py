@@ -335,23 +335,18 @@ def reject_borrow_request(request, request_id):
 def delete_borrow_request(request, request_id):
     borrow_request = get_object_or_404(BorrowRequest, id=request_id)
 
-    if borrow_request.requester != request.user and borrow_request.owner != request.user:
+    if request.user not in [borrow_request.requester, borrow_request.owner]:
         return Response(
             {"message": "You are not authorized to delete this borrow request."},
-            status=status.HTTP_403_FORBIDDEN
-        )
-
-    if borrow_request.status in ['ACCEPTED', 'RETURNED', 'PENDING']:
+            status=status.HTTP_403_FORBIDDEN)
+    if borrow_request.status in ['ACCEPTED', 'RETURNED']:
         return Response(
-            {"message": "Accepted or returned requests cannot be deleted."},
-            status=status.HTTP_400_BAD_REQUEST
-        )
-    borrow_request.delete() 
+            {"message": "Accepted or returned borrow requests cannot be deleted."}, status=status.HTTP_400_BAD_REQUEST)
+    borrow_request.delete()
 
     return Response(
-        {"message": "Borrow request deleted successfully."},
-        status=status.HTTP_200_OK
-    )
+        {"message": "Borrow request deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
+
 
 
 # borrower history
