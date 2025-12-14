@@ -343,9 +343,7 @@ def delete_borrow_request(request, request_id):
         return Response(
             {"message": "Accepted or returned borrow requests cannot be deleted."}, status=status.HTTP_400_BAD_REQUEST)
     borrow_request.delete()
-
-    return Response(
-        {"message": "Borrow request deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
+    return Response({"message": "Borrow request deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
 
 
 
