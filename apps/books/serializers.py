@@ -99,24 +99,16 @@ class BookDetailSerializer(serializers.ModelSerializer):
     category = CategorySerializer(read_only=True)
     comments = CommentSerializer(many=True, read_only=True)
     is_available = serializers.SerializerMethodField()
-    is_wishlisted = serializers.SerializerMethodField()
-
     class Meta:
         model = Book
         fields = [
             'id', 'title', 'author', 'published_date',
             'book_image', 'language', 'created_at', 'updated_at',
-            'slug', 'category', 'owner', 'comments', 'short_description', 'is_available', 'is_wishlisted'
+            'slug', 'category', 'owner', 'comments', 'short_description', 'is_available',
         ]
 
     def get_is_available(self, obj):
         return obj.is_available
-    
-    def get_is_wishlisted(self, obj):
-        user = self.context.get('request').user
-        if user.is_authenticated:
-            return WishList.objects.filter(user=user, book=obj).exists()
-        return False
     
     
 

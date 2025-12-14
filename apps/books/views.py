@@ -244,9 +244,8 @@ def borrow_request(request, book_id):
         book=book,
         status='PENDING'
     )
-    serializer = BorrowRequestSerializer(borrower_request, data=request.data)
-    serializer.is_valid(raise_exception=True)
-    serializer.save()
+    serializer = BorrowRequestSerializer(borrower_request, context={'request': request})
+
     borrower_mail = request.user.email
     book_owner = book.owner.email
     send_mail_to_lender(book_owner, borrower_mail, book.title)
