@@ -229,7 +229,7 @@ def activate_user_account(request, user_id):
     mail = user.email
     send_mail_activation(mail)
     user.save()
-    return Response({"message": "User account activated"}, status=200)
+    return Response({"message": "User account activated."}, status=status.HTTP_200_OK)
 
 
 def send_mail_activation(receiver_email):
@@ -245,7 +245,6 @@ def send_mail_activation(receiver_email):
         to=[recipient_list],
     )
     mail.send(fail_silently=False)
-    print("Activation email sent successfully to:", recipient_list)
 
 
 @api_view(["PATCH"])
@@ -257,7 +256,7 @@ def deactivate_user_account(request, user_id):
     mail = user.email
     send_mail(mail)
     user.save()
-    return Response({"message":"Your account has been deactivated."}, status=status.HTTP_200_OK)
+    return Response({"message":"This users account has been deactivated."}, status=status.HTTP_200_OK)
 
 def send_mail(receiver_email):
     subject = "Account Deactivation Notice"
@@ -272,7 +271,6 @@ def send_mail(receiver_email):
         to=[recipient_list],
     )
     mail.send(fail_silently=False)
-    print("Deactivation email sent successfully to:", recipient_list)
 
 
 # Dashboard stats for counts active users, lenders, and borrowers
