@@ -220,6 +220,17 @@ def reset_password(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+@api_view(['PATCH'])
+@permission_classes([IsSuperAdmin])
+@authentication_classes([JWTAuthentication])
+def make_user_admin(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    user.role = 'ADMIN'
+    user.is_staff = True
+    user.is_active = True
+    user.save()
+    return Response({"message": "User promoted to admin."}, status=status.HTTP_200_OK)
+
 @api_view(['POST'])
 @permission_classes([IsSuperAdmin])
 @authentication_classes([JWTAuthentication])
