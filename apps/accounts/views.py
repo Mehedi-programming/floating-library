@@ -9,7 +9,7 @@ from django.utils import timezone
 from .models import *
 from .utils import *
 from .serializers import *
-from apps.accounts.permissions import IsSuperAdmin, IsActiveUser
+from apps.accounts.permissions import IsSuperAdmin, IsActiveUser, IsAdminUser
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 
@@ -112,7 +112,7 @@ def edit_profile(request):
 
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsActiveUser])
 @authentication_classes([JWTAuthentication])
 def change_password(request):
     serializer = ChangePasswordSerializer(data=request.data)
@@ -232,7 +232,7 @@ def make_user_admin(request, user_id):
     return Response({"message": "User promoted to admin."}, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
-@permission_classes([IsSuperAdmin])
+@permission_classes([IsSuperAdmin, IsAdminUser])
 @authentication_classes([JWTAuthentication])
 def activate_user_account(request, user_id):
     user = get_object_or_404(User, id=user_id)
@@ -259,7 +259,7 @@ def send_mail_activation(receiver_email):
 
 
 @api_view(["PATCH"])
-@permission_classes([IsSuperAdmin])
+@permission_classes([IsSuperAdmin, IsAdminUser])
 @authentication_classes([JWTAuthentication])
 def deactivate_user_account(request, user_id):
     user = get_object_or_404(User, id=user_id)
