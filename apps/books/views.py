@@ -329,6 +329,17 @@ def reject_borrow_request(request, request_id):
     return Response({"message":"Borrow request rejected.", "data": serializer.data}, status=status.HTTP_200_OK)       
 
 
+@api_view(["DELETE"])
+@permission_classes([IsActiveUser])
+@authentication_classes([JWTAuthentication])
+def delete_borrow_request(request, request_id):
+    borrow_request = get_object_or_404(BorrowRequest, id=request_id)
+    if borrow_request.requester != request.user and borrow_request.owner != request.user:
+        return Response({"message":"You are not authorized to delete this request."}, status=status.HTTP_403_FORBIDDEN)
+    
+    borrow_request.delete()
+    return Response({"message":"Borrow request deleted successfully."}, status=status.HTTP_200_OK)
+
 # borrower history
 @api_view(["GET"])
 @permission_classes([IsActiveUser])

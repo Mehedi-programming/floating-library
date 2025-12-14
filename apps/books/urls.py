@@ -23,6 +23,7 @@ urlpatterns = [
     path('cancel-borrow-request/<int:request_id>/', cancel_borrow_request, name='cancel_borrow_request'),
     path('accept_borrow_request/<int:request_id>/', accept_borrow_request, name='accept_borrow_request'),
     path('reject-borrow-request/<int:request_id>/', reject_borrow_request, name='reject_borrow_request'),
+    path('delete-borrow-request/<int:request_id>/', delete_borrow_request, name='delete_borrow_request'),
     path('borrow-request-page/', borrow_request_page, name='borrow_request_page'),
     path('lend-request-page/', lend_request_page, name='lend_request_page'),
     path('return-book/<int:request_id>/', return_book, name='return_book'),
